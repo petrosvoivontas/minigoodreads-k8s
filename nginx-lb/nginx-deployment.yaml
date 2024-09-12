@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: minigoodreads-nginx
+spec:
+    selector:
+        matchLabels:
+            app: minigoodreads-nginx
+    template:
+        metadata:
+            labels:
+                app: minigoodreads-nginx
+        spec:
+            containers:
+                - name: minigoodreads-nginx
+                  image: 'ghcr.io/petrosvoivontas/minigoodreads-fe:1.0.9'
+                  resources:
+                      limits:
+                          memory: '500Mi'
+                          cpu: '500m'
+                  ports:
+                      - containerPort: 80
+                  env:
+                      - name: be_host
+                        value: minigoodreads-be-svc
+                      - name: be_port
+                        value: '8081'
+            imagePullSecrets:
+                - name: ghcr

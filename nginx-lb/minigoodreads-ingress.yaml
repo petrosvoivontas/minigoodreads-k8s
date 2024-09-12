@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: minigoodreads-ingress
+    annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /$1
+        nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+    rules:
+        - host: 'minigoodreads.ddns.net'
+          http:
+              paths:
+                  - path: /(api/.*)
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: minigoodreads-be-svc
+                            port:
+                                number: 8081
+                  - path: /(.*)
+                    pathType: ImplementationSpecific
+                    backend:
+                        service:
+                            name: minigoodreads-nginx-svc
+                            port:
+                                name: nginx-port

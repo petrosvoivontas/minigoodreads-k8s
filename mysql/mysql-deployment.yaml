@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: minigoodreads-db
+spec:
+    selector:
+        matchLabels:
+            app: minigoodreads-db
+    template:
+        metadata:
+            labels:
+                app: minigoodreads-db
+        spec:
+            containers:
+                - name: minigoodreads-db
+                  image: 'ghcr.io/petrosvoivontas/minigoodreads-db:1.0.0'
+                  env:
+                      - name: MYSQL_DATABASE
+                        value: 'minigoodreads'
+                      - name: MYSQL_ROOT_PASSWORD
+                        value: 'root'
+                  resources:
+                      limits:
+                          memory: '500Mi'
+                          cpu: '500m'
+                  ports:
+                      - containerPort: 3306
+                  volumeMounts:
+                      - mountPath: /var/lib/mysql
+                        name: mysql-pvc-volume
+            imagePullSecrets:
+                - name: ghcr
+            volumes:
+                - name: mysql-pvc-volume
+                  persistentVolumeClaim:
+                      claimName: mysql-pvc

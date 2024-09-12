@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: minigoodreads-be
+spec:
+    selector:
+        matchLabels:
+            app: minigoodreads-be
+    template:
+        metadata:
+            labels:
+                app: minigoodreads-be
+        spec:
+            containers:
+                - name: 'minigoodreads-be'
+                  image: 'ghcr.io/petrosvoivontas/minigoodreads-be:1.0.1'
+                  env:
+                      - name: MYSQL_HOST
+                        value: 'minigoodreads-db-svc'
+                      - name: DB_NAME
+                        value: 'minigoodreads'
+                      - name: DB_USERNAME
+                        value: 'minigoodreads'
+                      - name: DB_PASS
+                        value: 'minigoodreads'
+                  resources:
+                      limits:
+                          memory: '500Mi'
+                          cpu: '500m'
+                  ports:
+                      - containerPort: 9090
+                #   readinessProbe:
+                #       httpGet:
+                #           path: /actuator/health/readiness
+                #           port: 8081
+                #       initialDelaySeconds: 60
+                #       periodSeconds: 5
+                #   livenessProbe:
+                #       httpGet:
+                #           path: /actuator/health/liveness
+                #           port: 8081
+                #       initialDelaySeconds: 60
+                #       periodSeconds: 5
+            imagePullSecrets:
+                - name: ghcr
