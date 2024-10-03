@@ -24,3 +24,7 @@ spec:
                             name: minigoodreads-nginx-svc
                             port:
                                 name: nginx-port
+    tls:
+        - hosts:
+              - minigoodreads.ddns.net
+          secretName: tls-secret
